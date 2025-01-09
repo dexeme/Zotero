@@ -1,13 +1,16 @@
 # Zotero
 
+Este template facilita a sincronização dos arquivos de uma instalação local do Zotero utilizando o GitHub como serviço de
+armazenamento em nuvem.
+
 ## Instalação
 
-Primeiramente, crie um fork deste repositório para uso pessoal. Após isso, clone seu repositório em sua máquina local.
+Primeiramente, crie um repositório para uso pessoal a partir deste template. Após isso, clone seu repositório em sua máquina local.
 O repositório local deverá estar localizado em `~/Zotero`.
 
 ```
 cd ~/
-git clone <url-do-seu-fork-deste-repositorio>
+git clone <url-do-seu-repositorio>
 ```
 
 Para executar pela primeira vez, execute o shellscript diretamente.
@@ -16,11 +19,13 @@ Para executar pela primeira vez, execute o shellscript diretamente.
 ~/Zotero/zotero.sh
 ```
 
-Isso baixará os arquivos do Zotero, abrirá o programa e, ao fechar a janela (não feche pelo terminal),
-enviará as mudanças ao repositório do GitHub.
-
-Após a primeira execução, um atalho é criado para iniciar o Zotero facilmente:
+Isso baixará todos os arquivos do Zotero automaticamente e abrirá o programa. Após a primeira execução,
+um atalho poderá ser usado para iniciar o Zotero:
 
 ```
 zotero
 ```
+
+Este atalho executa o shellscript apresentado acima. Antes de iniciar o Zotero, o script executa um `git pull`
+para baixar os arquivos remotos atualizados. Após terminar de usar o Zotero, feche-o normalmente e
+as mudanças serão salvas no seu repositório do GitHub automaticamente.
