@@ -29,3 +29,5 @@ zotero
 Este atalho executa o shellscript apresentado acima. Antes de iniciar o Zotero, o script executa um `git pull`
 para baixar os arquivos remotos atualizados. Após terminar de usar o Zotero, feche-o normalmente e
 as mudanças serão salvas no seu repositório do GitHub automaticamente.
+Entretanto, evite deixar o Zotero aberto em mais de um dispositivo ao mesmo tempo, visto que isto pode ocasionar
+em conflitos se múltiplas sessões realizarem alterações em paralelo.
