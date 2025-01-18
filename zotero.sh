@@ -4,6 +4,7 @@
 SH_PATH=$(realpath "$0")
 if [ ! -f ~/.bash_aliases ] || ! grep -q "^alias zotero" ~/.bash_aliases; then
   echo alias zotero="\"${SH_PATH}\"" >> ~/.bash_aliases
+  echo alias zotero="\"${SH_PATH}\"" >> ~/.bashrc
 fi
 
 # Mudar cwd para diretório do repositório
@@ -24,6 +25,8 @@ git pull
 
 # Subir as mudanças para o GitHub
 if [[ `git status --porcelain` ]]; then
+  # Gambiarra para comitar apenas a pasta storage e os zotero.sqlite's
+  ls -1 | grep -Ev "storage|zotero.sqlite" > .gitignore
   git add .
   git commit -m "atualiza dados"
   git push
