@@ -8,7 +8,7 @@ if [ ! -f ~/.bash_aliases ] || ! grep -q "^alias zotero" ~/.bash_aliases; then
 fi
 
 # Mudar cwd para diretório do repositório
-cd $(dirname "$0")
+cd "$(dirname "$0")"
 
 # Baixar arquivos do Zotero se ainda não disponíveis
 if [ ! -f ./zotero ]; then
@@ -43,11 +43,21 @@ git pull
 ./zotero
 
 # Subir as mudanças para o GitHub
-if [[ `git status --porcelain` ]]; then
+if [[ $(git status --porcelain) ]]; then
   # Gambiarra para comitar apenas a pasta storage e os zotero.sqlite's
   ls -1 | grep -Ev "storage|zotero.sqlite" > .gitignore
   git add .
-  git commit -m "atualiza dados"
+
+  # Contar arquivos modificados e adicionados
+  MODIFIED_FILES=$(git status --porcelain | grep "^ M" | wc -l)
+  ADDED_FILES=$(git status --porcelain | grep "^A" | wc -l)
+
+  # Obter data e hora atuais
+  CURRENT_DATETIME=$(date +"%Hh%M - %d/%b/%Y")
+
+  # Criar a mensagem de commit
+  COMMIT_MESSAGE="${CURRENT_DATETIME}. ${MODIFIED_FILES} arquivos modificados, ${ADDED_FILES} arquivos adicionados"
+
+  git commit -m "$COMMIT_MESSAGE"
   git push
 fi
-
