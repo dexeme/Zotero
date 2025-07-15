@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source ~/ssh.sh
 # Cria o atalho da linha de comando
 SH_PATH=$(realpath "$0")
 if [ ! -f ~/.bash_aliases ] || ! grep -q "^alias zotero" ~/.bash_aliases; then
@@ -8,7 +8,7 @@ if [ ! -f ~/.bash_aliases ] || ! grep -q "^alias zotero" ~/.bash_aliases; then
 fi
 
 # Mudar cwd para diretório do repositório
-cd "$(dirname "$0")"
+cd $(dirname "$0")
 
 # Baixar arquivos do Zotero se ainda não disponíveis
 if [ ! -f ./zotero ]; then
@@ -27,11 +27,42 @@ if [ -d "$STORAGE_DIR" ]; then
         pdf_name=$(basename "$pdf_file" .pdf)
         parent_dir=$(dirname "$folder")
         new_folder="$parent_dir/$pdf_name"
+
         if [ "$folder" != "$new_folder" ]; then
-          mv "$folder" "$new_folder"
-          echo "Renomeado: $folder -> $new_folder"
+          if [ -d "$new_folder" ]; then
+            echo "Aviso: O diretório $new_folder já existe. Verificando arquivos duplicados..."
+
+            for file in "$folder"/*; do
+              if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                dest_file="$new_folder/$filename"
+
+                if [ -f "$dest_file" ]; then
+                  echo "Removendo duplicata: $file"
+                  rm "$file"
+                else
+                  mv "$file" "$new_folder/"
+                fi
+              fi
+            done
+
+            if [ -z "$(ls -A "$folder")" ]; then
+              rmdir "$folder"
+            fi
+          else
+            mv "$folder" "$new_folder"
+            echo "Renomeado: $folder -> $new_folder"
+          fi
         fi
       fi
+    fi
+  done
+
+  # Remover possíveis pastas extras deixadas pelo Zotero
+  for folder in "$STORAGE_DIR"/*; do
+    if [ -d "$folder" ] && [ -z "$(ls -A "$folder")" ]; then
+      echo "Removendo pasta vazia: $folder"
+      rmdir "$folder"
     fi
   done
 fi
